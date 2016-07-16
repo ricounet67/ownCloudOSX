@@ -54,21 +54,144 @@ The default configuration currently active so it will listen on port 8080 instea
 curl -IL http://127.0.0.1:8080
 ```
 The output should look like this:
+```
+HTTP/1.1 200 OK
+Server: nginx/1.6.2
+Date: Mon, 19 Oct 2014 19:07:47 GMT
+Content-Type: text/html
+Content-Length: 612
+Last-Modified: Mon, 19 Oct 2014 19:01:32 GMT
+Connection: keep-alive
+ETag: "5444dea7-264"
+Accept-Ranges: bytes
+```
+Stop Nginx again:
+```
+sudo launchctl unload /Library/LaunchDaemons/homebrew.mxcl.nginx.plist
+```
+###More configuration
+####nginx.conf
+Create these bunch of folders which we're going to use for the upcoming configuration:
+```
+mkdir -p /usr/local/etc/nginx/logs
+mkdir -p /usr/local/etc/nginx/sites-available
+mkdir -p /usr/local/etc/nginx/sites-enabled
+mkdir -p /usr/local/etc/nginx/conf.d
+mkdir -p /usr/local/etc/nginx/ssl
+sudo mkdir -p /var/www
+sudo chown :staff /var/www
+sudo chmod 775 /var/www
+```
+This nginx folder distribution we just created use to be the same in linux systems.
 
-> HTTP/1.1 200 OK
+##PHP-FPM
+Since ownCloud is written in PHP an interpreter for it is needed in order to make it run alongside Nginx.
 
-> Server: nginx/1.6.2
+Homebrew doesn't come with a formula for PHP-FPM by default, you need to `tap` (or register) a special PHP repository first:
+```
+brew tap homebrew/dupes
+brew tap homebrew/php
+brew doctor
+brew update
+```
+Now you can install PHP using the following command. The arguments make sure it compiles with MySQL support and doesn't configure the default Apache:
 
-> Date: Mon, 19 Oct 2014 19:07:47 GMT
+The lightest installation is to use SQLite, because SQLite is a serverless database and it doesn't use so many resources of the computer.
+```
+brew install --without-apache --with-fpm php56
+```
 
-> Content-Type: text/html
+If you want to use MySQL, just add `--with-mysql` to the command:
+```
+brew install --without-apache --with-fpm --with-mysql php56
+```
+Homebrew is now going to download and compile the PHP-FPM source code for you. Give it some time, it could take some minutes.
 
-> Content-Length: 612
+###Setup PHP CLI binary
+If you want to use the PHP command line tools, you need to update the `$PATH` environment variable of your shell profile.
 
-> Last-Modified: Mon, 19 Oct 2014 19:01:32 GMT
+If you use the default bash shell:
+```
+echo 'export PATH="/usr/local/sbin:$PATH"' >> ~/.bash_profile && . ~/.bash_profile
+```
 
-> Connection: keep-alive
+IF you use ZSH:
+```
+echo 'export PATH="/usr/local/sbin:$PATH"' >> ~/.zshrc && . ~/.zshrc
+```
 
-> ETag: "5444dea7-264"
+If you are not sure which one you use, run `echo $SHELL` in a Terminal.app window. Since I use ZSH it returns this:
+> /bin/zsh
 
-> Accept-Ranges: bytes
+###Setup auto start
+
+Create a folder for the LaunchAgents:
+```
+mkdir -p ~/Library/LaunchAgents
+```
+Once done that or if the folder already exists, create a symlink the start/stop service:
+```
+ln -sfv /usr/local/opt/php56/homebrew.mxcl.php56.plist ~/Library/LaunchAgents/
+```
+Now try to start PHP-FPM:
+```
+launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.php56.plist
+```
+Assure PHP-FPM is running. To do so, check if there is an open listener on port `9000`:
+```
+lsof -Pni4 | grep LISTEN | grep php
+```
+The output should look something like this:
+```
+php-fpm   69659  frdmn    6u  IPv4 0x8d8ebe505a1ae01      0t0  TCP 127.0.0.1:9000 (LISTEN)
+php-fpm   69660  frdmn    0u  IPv4 0x8d8ebe505a1ae01      0t0  TCP 127.0.0.1:9000 (LISTEN)
+php-fpm   69661  frdmn    0u  IPv4 0x8d8ebe505a1ae01      0t0  TCP 127.0.0.1:9000 (LISTEN)
+php-fpm   69662  frdmn    0u  IPv4 0x8d8ebe505a1ae01      0t0  TCP 127.0.0.1:9000 (LISTEN)
+```
+
+###Additional modules 
+Install some additional PHP Modules which will be needed for ownCloud later:
+```
+brew install -v php56-opcache
+brew install php56-apcu
+brew install mcrypt
+brew install php56-mcrypt
+brew install php56-intl
+```
+
+###Config File
+Edit `php.ini` Config-File
+```
+nano -w /usr/local/etc/php/5.6/php.ini
+```
+And look for the following parameters. Set the Parameters to your needs – the Explanation of each Parameter can be found next to the Parameter. This are my settings:
+```
+upload_max_filesize = 250M
+max_file_uploads = 50
+default_charset = "UTF-8"
+post_max_size = 0
+default_socket_timeout = 3000
+mysql.connect_timeout = 120
+error_log = /usr/local/var/log/php-error.log
+```
+
+In my case i'm the only person using my ownCloud services, so i reduced the processes by setting them static and setting a fixed number for it. 
+Edit `php-fpm.conf` File
+```
+nano -w /usr/local/etc/php/5.6/php-fpm.conf
+```
+And look for the following parameters. Set the Parameters to your needs – the Explanation of each Parameter can be found next to the Parameter. This are my settings:
+```
+pm = static
+pm.max_children = 1
+```
+The processes are set dynamic by default and they come with some parameters enabled in order to work dynamically, you need to comment out these paramaters, to do so write a `;` before them:
+```
+; pm.start_servers = 3
+; pm.min_spare_servers = 2
+; pm.max_spare_servers = 5
+```
+
+##Databases
+
+###SQLite

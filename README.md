@@ -84,15 +84,15 @@ sudo chmod 775 /var/www
 ```
 This nginx folder distribution we just created use to be the same in linux systems.
 
+
+###ownCloud Files
 I created some config files to run the services, just download them. Place the `nginx.conf` file in `/usr/local/etc/nginx/` and the `ownCloud` file in `/usr/local/etc/nginx/site-available/`, for the second file you need to create a symlink into `/usr/local/etc/nginx/sites-enabled/` with the following command:
 ```
 ln -sfv /usr/local/etc/nginx/site-available/ownCloud //usr/local/etc/nginx/site-enabled/
 ```
 The `ownCloud` file needs some parameters according to your needs, like the `server_name` directives, the `ssl_certificate` and `ssl_certificate_key` paths, the `root` path to your ownCloud installation folder.
 
-Because you're doing this in order to access to your cloud service from anywhere you should write your domain name in the `server_name` name directive, the SSL directives needs your certificates, you can create them (the how-to will be explained later) and use them without validating them, which is not a good choice, i used the [StartSSL](https://www.startssl.com/) to validate mine, they offer a nice free plan.
-
-And look for the following parameters. Set the Parameters to your needs – the Explanation of each Parameter can be found next to the Parameter. This are my settings:
+Because you're doing this in order to access to your cloud service from anywhere you should write your domain name in the `server_name` name directive, the SSL directives need your certificates, you can create them (the how-to will be explained later) and use them without validating them, which is not a good choice, i used the [StartSSL](https://www.startssl.com/) services to validate mine, they offer a nice free plan.
 
 ##PHP-FPM
 Since ownCloud is written in PHP an interpreter for it is needed in order to make it run alongside Nginx.
@@ -278,4 +278,98 @@ Add the following line to the End of the Configuration-File to enable Caching:
 memcache.local' => '\OC\Memcache\APCu',
 ```
 
+##SSL
+Change directory to the one created on the Nginx step for SSL certificates and private keys:
+```
+cd /usr/local/etc/nginx/ssl
+```
+SSL
+
+You will install a SSL Certificate directly – So all connections between the ownCloud Server and Client will be encrypted. If you don’t have an SSL Certificate, you can create your own:
+```
+openssl genrsa -des3 -passout pass:x -out server.pass.key 2048
+openssl rsa -passin pass:x -in server.pass.key -out server.key
+openssl req -new -key server.key -out server.csr
+```
+
+##Control the services
+Because your probably need to restart the one or other service sooner or later, you probably want to set up some aliases:
+
+```
+curl -L https://gist.github.com/frdmn/7853158/raw/bash_aliases -o /tmp/.bash_aliases
+cat /tmp/.bash_aliases >> ~/.bash_aliases
+```
+
+If you use the default Bash shell:
+```
+echo "source ~/.bash_aliases" >> ~/.bash_profile && . ~/.bash_profile
+```
+or if you use ZSH:
+```
+echo "source ~/.bash_aliases" >> ~/.zshrc &&  ~/.zshrc
+```
+
+Now you can use handy short aliases instead of typing the long
+`launchctl` commands:
+
+###Nginx
+You can start, stop and restart Nginx with:
+```
+nginx.start
+nginx.stop
+nginx.restart
+```
+To quickly tail the latest error or access logs:
+```
+nginx.logs.access
+nginx.logs.default.access
+nginx.logs.phpmyadmin.access
+nginx.logs.default-ssl.access
+nginx.logs.error
+nginx.logs.phpmyadmin.error
+```
+Check config:
+```
+sudo nginx -t
+```
+###PHP-FPM
+Start, start and restart PHP-FPM:
+```
+php-fpm.start
+php-fpm.stop
+php-fpm.restart
+```
+Check config:
+```
+php-fpm -t
+```
+###MySQL
+Start, start and restart your MySQL server:
+```
+mysql.start
+mysql.stop
+mysql.restart
+```
 ##Troubleshooting
+###PHP
+You can read the PHP-Error log with the following command:
+```
+cat /usr/local/var/log/php-error.log
+```
+
+###ownCloud
+
+If you receive the message that you are accessing the server from an untrusted domain, you can fix it by adding your hostname (DynDNS, IP-Addresses) to the ownCloud Config-File.
+
+Edit the Config-File with:
+```
+nano -w /usr/local/var/www/htdocs/apps/owncloud/config/config.php
+```
+Add new Hostnames / IPs: Look for the `trusted_domains` segment and add +1 line to the array, don’t foget to close the line with `,`. See example:
+
+'trusted_domains' =>
+array (
+0 => 'localhost:8080',
+1 => '192.168.0.1:8080',
+2 => 'my-dyndnsname.example-dyndns.org',
+),

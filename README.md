@@ -249,7 +249,7 @@ mv -R ./owncloud/ /var/www/
 ###Installation
 Fire up the browser on the Server now with ```https://your.domain.here/```, before that you may need to do some port forwarding and point your domain to your public ip address. 
 
-> Note: The path to your data folders always need to have a folder named `data` inside of them, you'll see dat in the coming configuration.
+> Note: The path to your data folders always need to have a folder named `data` inside of them, you'll see that in the coming configuration.
 
 ####In case you're using SQLite:
 
@@ -267,6 +267,5 @@ Add the following line to the End of the Configuration-File to enable Caching:
 ```
 memcache.local' => '\OC\Memcache\APCu',
 ```
-
 
 ##Troubleshooting

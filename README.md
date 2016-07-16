@@ -5,7 +5,7 @@ OwnCloud is the ultimate tool for people that want to host their own cloud stora
 This tutorial gathers information from various sources that helped to have running ownCloud on OS X El Capitan (v10.11.5).
 
 ##XCode Command Line Tools
-First of all we need to install the XCode Command Line Tools, to do so type the next command on a terminal to install the lastes version
+First of all you need to install the XCode Command Line Tools, to do so type the next command on a terminal to install the lastes version
 ```
 xcode-select --install
 ```
@@ -197,3 +197,35 @@ The processes are set dynamic by default and they come with some parameters enab
 ##Databases
 
 ###SQLite
+The easiest and lightest way to use a database with ownCloud is SQLite, just type the following command:
+```
+brew install sqlite
+```
+And that's it, the configuration process will be done when we run ownCloud for the first time.
+
+###MySQL
+In case you want to use MySQL, install it:
+```
+brew install mysql
+```
+And set up the start/stop service, so the MySQL server gets automatically started and stopped when the Mac is shutdown/powered on:
+```
+ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents
+```
+To start if manually for now, run:
+```
+launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+```
+####Configuring
+#####Pasword:
+Set a password for mysql. The default Password after the Installation is empty, so just hit return if asked and enter your new password afterwards.
+```
+mysqladmin -u root -p <your password here>
+```
+Try to login to mysql with your new password:
+```
+mysql -u root -p
+```
+If everything goes alright exit it by entering “quit”.
+
+#####ownCloud Database

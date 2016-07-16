@@ -2,7 +2,7 @@
 
 OwnCloud is the ultimate tool for people that want to host their own cloud storage service, according to documentation it's better to run it on linux-based systems, although i have it running on my macmini for a few time now and haven't had any issues yet.
 
-This tutorial gathers information from various sources that helped to have running ownCloud on OS X El Capitan (v10.11.5).
+This tutorial gathers information from various sources that helped to have running ownCloud on OS X El Capitan (v10.11.5), and will help you to serve your cloud service and access it from anywhere by typing your domain in any browser.
 
 ##XCode Command Line Tools
 First of all you need to install the XCode Command Line Tools, to do so type the next command on a terminal to install the lastes version
@@ -229,3 +229,41 @@ mysql -u root -p
 If everything goes alright exit it by entering “quit”.
 
 #####ownCloud Database
+We need to create a database first.
+Login to mysql
+```
+mysql -u root -p
+```
+And write the following query:
+```
+CREATE USER 'owncloud'@'localhost' IDENTIFIED BY 'password';
+CREATE DATABASE IF NOT EXISTS owncloud;
+GRANT ALL PRIVILEGES ON owncloud.* TO 'owncloud'@'localhost' IDENTIFIED BY 'password';
+```
+
+##ownCloud
+Go to [owncloud.org](https://owncloud.org/install/) and download. In my Case i downloaded owncloud 9.0.3. The extracted package should give you a folder “own cloud”. Move the folder to your web servers root directory.
+```
+mv -R ./owncloud/ /var/www/
+```
+###Installation
+Fire up the browser on the Server now with “https://your.domain.here/”, before that you may need to do some port forwarding and point your domain to your public ip address. 
+
+####In case you're using SQLite:
+
+All you have to do is to create a user and a password, write the path to your data folder `/var/www/owncloud/data`, select SQLite, then click on finish setup and that's it, now you have a fully running cloud service on your machine.
+
+####In case you're using MySQL:
+
+Create a user and a password, write the path to your data folder `/var/www/owncloud/data`, change the Database Configuration to “MySQL / MariaDB”. Enter the Database user “owncloud” with the chosen password, then finish setup. You’ll be logged on to ownlCloud afterwards automatically.
+
+Edit the Configuration File after the Setup is done:
+```
+nano -w /usr/local/var/www/htdocs/apps/owncloud/config/config.php
+```
+Add the following line to the End of the Configuration-File to enable Caching:
+```
+memcache.local' => '\OC\Memcache\APCu',
+```
+
+##Troubleshooting

@@ -94,17 +94,19 @@ brew tap homebrew/php
 brew doctor
 brew update
 ```
-Now you can install PHP using the following command. The arguments make sure it compiles with MySQL support and doesn't configure the default Apache:
+Now you can install PHP using the following command:
+
+If you want to use MySQL, just add `--with-mysql` to the command, the arguments make sure it compiles with MySQL support and doesn't configure the default Apache:
+```
+brew install --without-apache --with-fpm --with-mysql php56
+```
 
 The lightest installation is to use SQLite, because SQLite is a serverless database and it doesn't use so many resources of the computer.
+In case you want to use SQLite just use the following command
 ```
 brew install --without-apache --with-fpm php56
 ```
 
-If you want to use MySQL, just add `--with-mysql` to the command:
-```
-brew install --without-apache --with-fpm --with-mysql php56
-```
 Homebrew is now going to download and compile the PHP-FPM source code for you. Give it some time, it could take some minutes.
 
 ###Setup PHP CLI binary

@@ -1,6 +1,6 @@
 #ownCloud & Nginx on OS X El Capitan
 
-OwnCloud is the ultimate tool for people that want to host their own cloud storage service, according to documentation it's better to run it on linux-based systems, although i have it running on my macmini for a few time now and haven't had any issues yet.
+OwnCloud is the ultimate tool for people that want to host their own cloud storage service, according to documentation it's better to run it on linux-based systems, although i have it running on my Macmini for a few time now and haven't had any issues yet.
 
 This tutorial gathers information from various sources that helped to have running ownCloud on OS X El Capitan (v10.11.5), and will help you to serve your cloud service and access it from anywhere by typing your domain in any browser.
 
@@ -37,7 +37,7 @@ Install the default Nginx with:
 brew install nginx
 ```
 ###Setup auto start
-Since you want to use port 80 (default HTTP port), you have to run the Nginx process with root privileges:
+Since you want to use `port 80` (default HTTP port), you have to run the Nginx process with root privileges:
 ```
 sudo cp -v /usr/local/opt/nginx/*.plist /Library/LaunchDaemons/
 sudo chown root:wheel /Library/LaunchDaemons/homebrew.mxcl.nginx.plist
@@ -49,7 +49,7 @@ Start Nginx with:
 ```
 sudo launchctl load /Library/LaunchDaemons/homebrew.mxcl.nginx.plist
 ```
-The default configuration currently active so it will listen on port 8080 instead of the HTTP default port 80. Ignore that for now:
+The default configuration currently active so it will listen on `port 8080` instead of the HTTP default `port 80`. Ignore that for now:
 ```
 curl -IL http://127.0.0.1:8080
 ```
@@ -86,9 +86,9 @@ This nginx folder distribution we just created use to be the same in linux syste
 
 
 ###ownCloud Files
-I created some config files to run the services, just download them. Place the `nginx.conf` file in `/usr/local/etc/nginx/` and the `ownCloud` file in `/usr/local/etc/nginx/site-available/`, for the second file you need to create a symlink into `/usr/local/etc/nginx/sites-enabled/` with the following command:
+I created some config files to run the services, just download them. Place the `nginx.conf` file in `/usr/local/etc/nginx/` and the `ownCloud` file in `/usr/local/etc/nginx/sites-available/`, for the second file you need to create a symlink into `/usr/local/etc/nginx/sites-enabled/` with the following command:
 ```
-ln -sfv /usr/local/etc/nginx/site-available/ownCloud //usr/local/etc/nginx/site-enabled/
+ln -sfv /usr/local/etc/nginx/sites-available/ownCloud /usr/local/etc/nginx/sites-enabled/
 ```
 The `ownCloud` file needs some parameters according to your needs, like the `server_name` directives, the `ssl_certificate` and `ssl_certificate_key` paths, the `root` path to your ownCloud installation folder.
 
@@ -127,7 +127,7 @@ If you use the default bash shell:
 echo 'export PATH="/usr/local/sbin:$PATH"' >> ~/.bash_profile && . ~/.bash_profile
 ```
 
-IF you use ZSH:
+If you use ZSH:
 ```
 echo 'export PATH="/usr/local/sbin:$PATH"' >> ~/.zshrc && . ~/.zshrc
 ```
@@ -149,7 +149,7 @@ Now try to start PHP-FPM:
 ```
 launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.php56.plist
 ```
-Assure PHP-FPM is running. To do so, check if there is an open listener on port `9000`:
+Assure PHP-FPM is running. To do so, check if there is an open listener on `port 9000`:
 ```
 lsof -Pni4 | grep LISTEN | grep php
 ```
@@ -176,7 +176,7 @@ Edit `php.ini` Config-File
 ```
 nano -w /usr/local/etc/php/5.6/php.ini
 ```
-And look for the following parameters. Set the Parameters to your needs – the Explanation of each Parameter can be found next to the Parameter. This are my settings:
+And look for the following parameters. Set the Parameters to your needs, the Explanation of each Parameter can be found next to the Parameter. This are my settings:
 ```
 upload_max_filesize = 250M
 max_file_uploads = 50
@@ -192,7 +192,7 @@ Edit `php-fpm.conf` File
 ```
 nano -w /usr/local/etc/php/5.6/php-fpm.conf
 ```
-And look for the following parameters. Set the Parameters to your needs – the Explanation of each Parameter can be found next to the Parameter. This are my settings:
+And look for the following parameters. Set the Parameters to your needs, the Explanation of each Parameter can be found next to the Parameter. This are my settings:
 ```
 pm = static
 pm.max_children = 1
@@ -211,7 +211,7 @@ The easiest and lightest way to use a database with ownCloud is SQLite, just typ
 ```
 brew install sqlite
 ```
-And that's it, the configuration process will be done when we run ownCloud for the first time.
+And that's it, the configuration process will be done when you run ownCloud for the first time.
 
 ###MySQL
 In case you want to use MySQL, install it:
@@ -227,7 +227,7 @@ To start if manually for now, run:
 launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
 ```
 ####Configuring
-#####Pasword:
+#####Password:
 Set a password for mysql. The default Password after the Installation is empty, so just hit return if asked and enter your new password afterwards.
 ```
 mysqladmin -u root -p <your password here>
@@ -236,9 +236,9 @@ Try to login to mysql with your new password:
 ```
 mysql -u root -p
 ```
-If everything goes alright exit it by entering “quit”.
+If everything goes alright exit it by entering `quit`.
 
-#####ownCloud Database
+#####MySQL - ownCloud Database
 We need to create a database first.
 Login to mysql
 ```
@@ -257,7 +257,7 @@ Go to [owncloud.org](https://owncloud.org/install/) and download. In my Case i d
 mv -R ./owncloud/ /var/www/
 ```
 ###Installation
-Fire up the browser on the Server now with ```https://your.domain.here/```, before that you may need to do some port forwarding and point your domain to your public ip address.
+Fire up the browser on the Server now with ```https://your.domain.here/```, before that you may need to do some port forwarding and point your domain name to your public IP address.
 
 > Note: The path to your data folders always need to have a folder named `data` inside of them, you'll see that in the coming configuration.
 
@@ -267,7 +267,7 @@ All you have to do is to create a user and a password, write the path to your da
 
 ####In case you're using MySQL:
 
-Create a user and a password, write the path to your data folder `/path/to/your/data/folder/data`, change the Database Configuration to “MySQL / MariaDB”. Enter the Database user “owncloud” with the chosen password, then finish setup. You’ll be logged on to ownlCloud afterwards automatically.
+Create a user and a password, write the path to your data folder `/path/to/your/data/folder/data`, change the Database Configuration to `MySQL / MariaDB`. Enter the Database user “owncloud” with the chosen password, then finish setup. You’ll be logged on to ownlCloud afterwards automatically.
 
 Edit the Configuration File after the Setup is done:
 ```
@@ -279,13 +279,11 @@ memcache.local' => '\OC\Memcache\APCu',
 ```
 
 ##SSL
-Change directory to the one created on the Nginx step for SSL certificates and private keys:
+Change directory to the one created in the Nginx step for SSL certificates and private keys:
 ```
 cd /usr/local/etc/nginx/ssl
 ```
-SSL
-
-You will install a SSL Certificate directly – So all connections between the ownCloud Server and Client will be encrypted. If you don’t have an SSL Certificate, you can create your own:
+You will install a SSL Certificate directly, so all connections between the ownCloud Server and Client will be encrypted. If you don’t have an SSL Certificate, you can create your own:
 ```
 openssl genrsa -des3 -passout pass:x -out server.pass.key 2048
 openssl rsa -passin pass:x -in server.pass.key -out server.key
@@ -293,13 +291,11 @@ openssl req -new -key server.key -out server.csr
 ```
 
 ##Control the services
-Because your probably need to restart the one or other service sooner or later, you probably want to set up some aliases:
-
+Because you probably need to restart one or other service sooner or later, you probably want to set up some aliases:
 ```
 curl -L https://gist.github.com/frdmn/7853158/raw/bash_aliases -o /tmp/.bash_aliases
 cat /tmp/.bash_aliases >> ~/.bash_aliases
 ```
-
 If you use the default Bash shell:
 ```
 echo "source ~/.bash_aliases" >> ~/.bash_profile && . ~/.bash_profile
@@ -308,7 +304,6 @@ or if you use ZSH:
 ```
 echo "source ~/.bash_aliases" >> ~/.zshrc &&  ~/.zshrc
 ```
-
 Now you can use handy short aliases instead of typing the long
 `launchctl` commands:
 
@@ -356,9 +351,7 @@ You can read the PHP-Error log with the following command:
 ```
 cat /usr/local/var/log/php-error.log
 ```
-
 ###ownCloud
-
 If you receive the message that you are accessing the server from an untrusted domain, you can fix it by adding your hostname (DynDNS, IP-Addresses) to the ownCloud Config-File.
 
 Edit the Config-File with:
@@ -366,10 +359,13 @@ Edit the Config-File with:
 nano -w /usr/local/var/www/htdocs/apps/owncloud/config/config.php
 ```
 Add new Hostnames / IPs: Look for the `trusted_domains` segment and add +1 line to the array, don’t foget to close the line with `,`. See example:
-
+```
 'trusted_domains' =>
 array (
 0 => 'localhost:8080',
 1 => '192.168.0.1:8080',
 2 => 'my-dyndnsname.example-dyndns.org',
 ),
+```
+
+###And that's all you need to do in order to have ownCloud running on your Mac. Feedback is always wellcome.

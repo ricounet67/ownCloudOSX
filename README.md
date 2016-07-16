@@ -249,13 +249,15 @@ mv -R ./owncloud/ /var/www/
 ###Installation
 Fire up the browser on the Server now with ```https://your.domain.here/```, before that you may need to do some port forwarding and point your domain to your public ip address. 
 
+> Note: The path to your data folders always need to have a folder named `data` inside of them, you'll see dat in the coming configuration.
+
 ####In case you're using SQLite:
 
-All you have to do is to create a user and a password, write the path to your data folder `/var/www/owncloud/data`, select SQLite, then click on finish setup and that's it, now you have a fully running cloud service on your machine.
+All you have to do is to create a user and a password, write the path to your data folder `/path/to/your/data/folder/data`, select SQLite, then click on finish setup and that's it, now you have a fully running cloud service on your machine.
 
 ####In case you're using MySQL:
 
-Create a user and a password, write the path to your data folder `/var/www/owncloud/data`, change the Database Configuration to “MySQL / MariaDB”. Enter the Database user “owncloud” with the chosen password, then finish setup. You’ll be logged on to ownlCloud afterwards automatically.
+Create a user and a password, write the path to your data folder `/path/to/your/data/folder/data`, change the Database Configuration to “MySQL / MariaDB”. Enter the Database user “owncloud” with the chosen password, then finish setup. You’ll be logged on to ownlCloud afterwards automatically.
 
 Edit the Configuration File after the Setup is done:
 ```
@@ -265,5 +267,6 @@ Add the following line to the End of the Configuration-File to enable Caching:
 ```
 memcache.local' => '\OC\Memcache\APCu',
 ```
+
 
 ##Troubleshooting

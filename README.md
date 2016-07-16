@@ -96,7 +96,7 @@ brew update
 ```
 Now you can install PHP using the following command:
 
-If you want to use MySQL, use this command, the arguments make sure it compiles with MySQL support and doesn't configure the default Apache:
+If you want to use MySQL, the arguments make sure it compiles with MySQL support and doesn't configure the default Apache:
 ```
 brew install --without-apache --with-fpm --with-mysql php56
 ```

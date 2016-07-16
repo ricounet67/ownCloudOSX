@@ -1,6 +1,6 @@
 #ownCloud & Nginx on OS X
 
-OwnCloud is the ultimate tool for people that want to host their own cloud storage service, according to documentation it's batter to run it on linux-based systems, i have it running on my macmini for a time now and haven't had any issues yet.
+OwnCloud is the ultimate tool for people that want to host their own cloud storage service, according to documentation it's better to run it on linux-based systems, i have it running on my macmini for a time now and haven't had any issues yet.
 
 This tutorial gathers information from various sources that helped to have running ownCloud on OS X.
 

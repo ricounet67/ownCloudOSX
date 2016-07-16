@@ -56,11 +56,19 @@ curl -IL http://127.0.0.1:8080
 The output should look like this:
 
 > HTTP/1.1 200 OK
+
 > Server: nginx/1.6.2
+
 > Date: Mon, 19 Oct 2014 19:07:47 GMT
+
 > Content-Type: text/html
+
 > Content-Length: 612
+
 > Last-Modified: Mon, 19 Oct 2014 19:01:32 GMT
+
 > Connection: keep-alive
+
 > ETag: "5444dea7-264"
+
 > Accept-Ranges: bytes

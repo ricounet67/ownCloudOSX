@@ -84,6 +84,16 @@ sudo chmod 775 /var/www
 ```
 This nginx folder distribution we just created use to be the same in linux systems.
 
+I created some config files to run the services, just download them. Place the `nginx.conf` file in `/usr/local/etc/nginx/` and the `ownCloud` file in `/usr/local/etc/nginx/site-available/`, for the second file you need to create a symlink into `/usr/local/etc/nginx/sites-enabled/` with the following command:
+```
+ln -sfv /usr/local/etc/nginx/site-available/ownCloud //usr/local/etc/nginx/site-enabled/
+```
+The `ownCloud` file needs some parameters according to your needs, like the `server_name` directives, the `ssl_certificate` and `ssl_certificate_key` paths, the `root` path to your ownCloud installation folder.
+
+Because you're doing this in order to access to your cloud service from anywhere you should write your domain name in the `server_name` name directive, the SSL directives needs your certificates, you can create them (the how-to will be explained later) and use them without validating them, which is not a good choice, i used the [StartSSL](https://www.startssl.com/) to validate mine, they offer a nice free plan.
+
+And look for the following parameters. Set the Parameters to your needs – the Explanation of each Parameter can be found next to the Parameter. This are my settings:
+
 ##PHP-FPM
 Since ownCloud is written in PHP an interpreter for it is needed in order to make it run alongside Nginx.
 
@@ -151,7 +161,7 @@ php-fpm   69661  frdmn    0u  IPv4 0x8d8ebe505a1ae01      0t0  TCP 127.0.0.1:900
 php-fpm   69662  frdmn    0u  IPv4 0x8d8ebe505a1ae01      0t0  TCP 127.0.0.1:9000 (LISTEN)
 ```
 
-###Additional modules 
+###Additional modules
 Install some additional PHP Modules which will be needed for ownCloud later:
 ```
 brew install -v php56-opcache
@@ -177,7 +187,7 @@ mysql.connect_timeout = 120
 error_log = /usr/local/var/log/php-error.log
 ```
 
-In my case i'm the only person using my ownCloud services, so i reduced the processes by setting them static and setting a fixed number for it. 
+In my case i'm the only person using my ownCloud services, so i reduced the processes by setting them static and setting a fixed number for it.
 Edit `php-fpm.conf` File
 ```
 nano -w /usr/local/etc/php/5.6/php-fpm.conf
@@ -247,7 +257,7 @@ Go to [owncloud.org](https://owncloud.org/install/) and download. In my Case i d
 mv -R ./owncloud/ /var/www/
 ```
 ###Installation
-Fire up the browser on the Server now with ```https://your.domain.here/```, before that you may need to do some port forwarding and point your domain to your public ip address. 
+Fire up the browser on the Server now with ```https://your.domain.here/```, before that you may need to do some port forwarding and point your domain to your public ip address.
 
 > Note: The path to your data folders always need to have a folder named `data` inside of them, you'll see that in the coming configuration.
 

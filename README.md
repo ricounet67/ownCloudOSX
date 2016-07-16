@@ -247,7 +247,7 @@ Go to [owncloud.org](https://owncloud.org/install/) and download. In my Case i d
 mv -R ./owncloud/ /var/www/
 ```
 ###Installation
-Fire up the browser on the Server now with “https://your.domain.here/”, before that you may need to do some port forwarding and point your domain to your public ip address. 
+Fire up the browser on the Server now with ```https://your.domain.here/```, before that you may need to do some port forwarding and point your domain to your public ip address. 
 
 ####In case you're using SQLite:
 

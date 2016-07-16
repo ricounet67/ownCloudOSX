@@ -1,8 +1,8 @@
-#ownCloud & Nginx on OS X
+#ownCloud & Nginx on OS X El Capitan
 
 OwnCloud is the ultimate tool for people that want to host their own cloud storage service, according to documentation it's better to run it on linux-based systems, although i have it running on my macmini for a few time now and haven't had any issues yet.
 
-This tutorial gathers information from various sources that helped to have running ownCloud on OS X.
+This tutorial gathers information from various sources that helped to have running ownCloud on OS X El Capitan (v10.11.5).
 
 ##XCode Command Line Tools
 First of all we need to install the XCode Command Line Tools, to do so type the next command on a terminal to install the lastes version

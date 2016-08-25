@@ -169,6 +169,20 @@ brew install php56-apcu
 brew install mcrypt
 brew install php56-mcrypt
 brew install php56-intl
+brew install php56-gd
+brew install php56-json
+brew install php56-curl
+brew install php56-imagick
+```
+
+If using mysql
+```
+brew install php56-mysql
+```
+
+If using sqlite
+```
+brew install php56-sqlite
 ```
 
 ###Config File
